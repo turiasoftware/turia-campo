@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+    <meta name="theme-color" content="#103c38" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <title>Turia Campo · Inventario</title>
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="apple-touch-icon" href="./icon-180.png" />
+    <link rel="icon" href="./icon-192.png" />
+    <link
+      rel="stylesheet"
+      href="./vendor/leaflet.css"
+      onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css'"
+    />
+    <link rel="stylesheet" href="./campo.css" />
+  </head>
+  <body>
+    <header>
+      <div class="brand">
+        <img src="./icon-192.png" alt="" /><strong>Turia <span>Campo</span></strong>
+      </div>
+      <button id="gps" class="gps"><i></i><span>Activar GPS</span></button>
+    </header>
+    <main>
+      <div id="map" aria-label="Mapa de trabajo"></div>
+      <div class="maptop">
+        <button id="layers" class="float">
+          <svg><use href="#stack" /></svg><span id="baseName">Ortofoto PNOA</span>
+        </button>
+        <div class="mapbuttons">
+          <button id="locate" class="sq" aria-label="Centrar en mi posición">
+            <svg><use href="#target" /></svg></button
+          ><button id="plus" class="sq" aria-label="Acercar mapa">+</button
+          ><button id="minus" class="sq" aria-label="Alejar mapa">−</button>
+        </div>
+      </div>
+      <div class="mapbottom">
+        <span id="mapStatus" hidden></span
+        ><button id="query" class="float">
+          <svg><use href="#pin" /></svg>Consultar centro
+        </button>
+      </div>
+    </main>
+    <section class="dock" aria-label="Captura en campo">
+      <div id="guideBar" hidden>
+        <div><strong id="guideTitle"></strong><small id="guideText"></small></div>
+        <button id="endGuide" aria-label="Terminar guía">×</button>
+      </div>
+      <div class="meta"><b>POSICIÓN GPS</b><span>ETRS89 / UTM 30N</span></div>
+      <div class="coords">
+        <div><small>X · Este</small><strong id="east">—</strong></div>
+        <div><small>Y · Norte</small><strong id="north">—</strong></div>
+        <div><small>Precisión</small><strong id="acc">—</strong></div>
+      </div>
+      <div class="row caprow">
+        <label class="pick"
+          ><span class="sr">Tipo de punto</span
+          ><select id="type"></select></label
+        ><button id="capture" class="primary">
+          <svg><use href="#camera" /></svg>Fijar punto + foto
+        </button>
+      </div>
+      <nav>
+        <button id="inventory">
+          <svg><use href="#list" /></svg>Inventario <b id="count">0</b></button
+        ><button id="measure">
+          <svg><use href="#ruler" /></svg>Medir</button
+        ><button id="tools">
+          <svg><use href="#toolsIcon" /></svg>Herramientas
+        </button>
+      </nav>
+    </section>
+    <div id="shade" hidden></div>
+    <section id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" hidden>
+      <div class="grip"></div>
+      <div class="sheethead">
+        <h1 id="sheetTitle"></h1>
+        <button id="close" class="plain sq" aria-label="Cerrar panel">×</button>
+      </div>
+      <div id="content"></div>
+    </section>
+    <div id="measureBar" hidden>
+      <div><b id="measureTitle"></b><small id="measureText"></small></div>
+      <div class="row">
+        <button id="undo">Deshacer</button><button id="measureInfo">Detalle</button
+        ><button id="finishMeasure">Salir</button>
+      </div>
+    </div>
+    <div class="crosshair" aria-hidden="true"></div>
+    <div id="toast" role="status" hidden></div>
+    <input id="photo" class="sr" type="file" accept="image/*" capture="environment" tabindex="-1" />
+    <svg width="0" height="0" aria-hidden="true" class="defs" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <symbol id="stack" viewBox="0 0 24 24">
+          <path d="m3 8 9-5 9 5-9 5zM3 12l9 5 9-5M3 16l9 5 9-5" />
+        </symbol>
+        <symbol id="target" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="7" />
+          <circle cx="12" cy="12" r="2" />
+          <path d="M12 1v4m0 14v4M1 12h4m14 0h4" />
+        </symbol>
+        <symbol id="camera" viewBox="0 0 24 24">
+          <path d="M3 7h4l2-3h6l2 3h4v13H3z" />
+          <circle cx="12" cy="13" r="3.5" />
+        </symbol>
+        <symbol id="list" viewBox="0 0 24 24">
+          <rect x="4" y="3" width="16" height="18" rx="2" />
+          <path d="M8 8h8M8 12h8M8 16h5" />
+        </symbol>
+        <symbol id="ruler" viewBox="0 0 24 24">
+          <path d="m3 16 13-13 5 5L8 21zM8 11l3 3m0-6 2 2m1-5 3 3" />
+        </symbol>
+        <symbol id="toolsIcon" viewBox="0 0 24 24">
+          <path d="M4 7h6m5 0h5M4 17h10m4 0h2" />
+          <circle cx="12" cy="7" r="2.5" />
+          <circle cx="16" cy="17" r="2.5" />
+        </symbol>
+        <symbol id="pin" viewBox="0 0 24 24">
+          <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" />
+          <circle cx="12" cy="10" r="2" />
+        </symbol>
+      </defs>
+    </svg>
+    <script src="./vendor/leaflet.js"></script>
+    <script src="./vendor/proj4.js"></script>
+    <script src="./vendor/jszip.min.js"></script>
+    <script>
+      // Las copias de distribución permiten iniciar sin cobertura. CDN de reserva.
+      (async () => {
+        for (const [name, path] of [
+          ["L", "leaflet@1.9.4/dist/leaflet.js"],
+          ["proj4", "proj4@2.12.1/dist/proj4.js"],
+          ["JSZip", "jszip@3.10.1/dist/jszip.min.js"],
+        ]) {
+          if (!window[name])
+            await new Promise((ok, fail) => {
+              const s = document.createElement("script");
+              s.onload = ok;
+              s.onerror = fail;
+              s.src = "https://cdn.jsdelivr.net/npm/" + path;
+              document.head.append(s);
+            });
+        }
+        const s = document.createElement("script");
+        s.src = "./campo.js";
+        s.onerror = () => {
+          document.getElementById("mapStatus").hidden = false;
+          document.getElementById("mapStatus").textContent =
+            "Falta campo.js. Comprueba los archivos publicados.";
+        };
+        document.body.append(s);
+      })().catch(() => {
+        const el = document.getElementById("mapStatus");
+        el.hidden = false;
+        el.textContent = "Faltan las bibliotecas del mapa. Abre el paquete completo con conexión.";
+      });
+    </script>
+  </body>
+</html>

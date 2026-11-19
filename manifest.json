@@ -1,0 +1,16 @@
+{
+  "id": "./",
+  "name": "Turia Campo · Inventario",
+  "short_name": "Turia Campo",
+  "description": "Inventario de infraestructuras con fotografía y coordenadas ETRS89 / UTM 30N.",
+  "lang": "es",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8faf5",
+  "theme_color": "#103c38",
+  "icons": [
+    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
