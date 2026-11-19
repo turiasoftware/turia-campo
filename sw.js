@@ -1,12 +1,14 @@
 "use strict";
 // El prefijo incluye el ámbito para convivir con otras instalaciones del mismo dominio.
 const PREFIX = "turia-campo:" + self.registration.scope + ":";
-const CACHE = PREFIX + "1.0.0";
+const CACHE = PREFIX + "1.3.0";
 const FILES = [
   "./",
   "./index.html",
   "./campo.css",
   "./campo.js",
+  "./municipio.js",
+  "./zonas.js",
   "./manifest.json",
   "./icon-180.png",
   "./icon-192.png",

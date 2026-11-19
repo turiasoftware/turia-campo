@@ -598,3 +598,54 @@ body.measuring .crosshair {
     display: none;
   }
 }
+
+.delete-point {
+  color: #8e2424;
+  border-color: #d4a6a6;
+  margin-top: 8px;
+}
+#gpsQuality {
+  display: block;
+  margin: 0 0 6px;
+  color: var(--pine);
+  font-size: 12px;
+  font-weight: 650;
+}
+#content .setting input:not([type]) {
+  width: 60%;
+  min-height: 48px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 6px;
+  font: inherit;
+}
+
+header .brand {
+  background: transparent;
+  border: 0;
+  padding: 0 8px 0 0;
+  color: white;
+  text-align: left;
+  min-width: 0;
+  flex: 1;
+}
+.brandText {
+  display: grid;
+  min-width: 0;
+}
+.brandText strong {
+  font-size: 18px;
+  color: white;
+}
+#projectName {
+  color: #ddf2a8;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+#projectName::after {
+  content: " ▾";
+}
+.wordmark > span {
+  margin-inline-start: 0.09em;
+}
